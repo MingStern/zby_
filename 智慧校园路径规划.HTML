@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>   
+        html,
+        body,    
+    #container {
+    width: 100%;
+    height: 100%;
+    }
+    .input-card{
+        position: fixed;
+        background-color: #aaa9b0;
+        overflow-y: auto;
+        width: 150px;
+        height: 150px;
+        top: 10px;
+        right: 10px;
+    }
+    .input-card .btn{
+    margin-right: 1.2rem;
+    width: 9rem;
+    }
+    .input-card .btn:last-child{
+    margin-right: 0;
+    }
+  </style>
+  <script type="text/javascript">
+    window._AMapSecurityConfig = {
+      securityJsCode: "bcc4d6cf009978c9267d86a6b8cd0f03",};  </script>
+    <script src="https://webapi.amap.com/loader.js"></script>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=be74933b48f9d477b3f9859974686609&plugin=AMap.Driving,AMap.MoveAnimation"></script>
+
+
+</head>
+<body>
+    <div id="container"></div>
+    <div class="input-card">
+    <button class="btn" onclick="startAnimation()">开始动画</button>
+    </div>
+    <script>
+      AMap.plugin('AMap.MoveAnimation', function(){
+       var marker, lineArr = [[102.756532,25.061530],[102.758107,25.059761],[102.758002,25.057414],[102.758537,25.056500],
+        [102.756169,25.056678],[102.756886,25.056595],[102.754517,25.056945],[102.754530,25.057596],[102.753019,25.05779],
+         [102.752300,25.057837],[102.753156,25.058554],[102.755250,25.059258],[102.756120,25.059556],[102.7524,25.0578]]
+         ;})
+        var map = new AMap.Map("container", {
+        center:[102.7560,25.0617],
+        viewMode:'2D',
+        zoom:15,
+      });//初始地图
+
+        marker = new AMap.Marker({
+          map: map,
+          position: [102.7560,25.0617],
+          icon: "https://a.amap.com/jsapi_demos/static/demo-center-v2/car.png",
+          offset: new AMap.Pixel(-13, -26),
+      });//图标
+      var lineArr =[];//容器
+      AMap.plugin(["AMap.Driving"], function () {
+      var driving = new AMap.Driving({
+        map:map,
+        policy:0, 
+      });
+      var startLngLat = [102.7560,25.0617]; 
+      var endLngLat = [102.7550,25.0609]; 
+      var opts = {waypoints: [[102.7547,25.0567]], };
+      driving.search(startLngLat, endLngLat, opts, function (status, result) {
+      console.log(status);
+      console.log(startLngLat);
+      result.routes[0].steps.forEach(function(item){
+      lineArr.push(...item.path)
+      });
+      });  
+      });
+    function startAnimation(){
+        marker.moveAlong(lineArr,{duration:2,})};//动画
+        
+        
+  </script>
+</body>
+</html>
